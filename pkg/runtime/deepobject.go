@@ -225,7 +225,7 @@ func assignPathValues(dst interface{}, pathValues fieldOrValue) error {
 		if _, isTime := iv.Interface().(time.Time); isTime {
 			var tm time.Time
 			var err error
-			tm, err = time.Parse(types.DateFormat, pathValues.value)
+			tm, err = time.Parse(time.RFC3339, pathValues.value)
 			if err != nil {
 				return errors.Wrap(err, "invalid date format")
 			}
@@ -311,9 +311,9 @@ func assignSlice(dst reflect.Value, pathValues fieldOrValue) error {
 
 	// This could be cleaner, but we can call into assignPathValues to
 	// avoid recreating this logic.
-	for i:=0; i < nValues; i++ {
+	for i := 0; i < nValues; i++ {
 		dstElem := dst.Index(i).Addr()
-		err := assignPathValues(dstElem.Interface(), fieldOrValue{value:values[i]})
+		err := assignPathValues(dstElem.Interface(), fieldOrValue{value: values[i]})
 		if err != nil {
 			return errors.Wrap(err, "error binding array")
 		}
